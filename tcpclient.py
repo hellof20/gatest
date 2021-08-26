@@ -2,10 +2,14 @@
 
 import socket
 import time
+import sys
+
+ip = sys.argv[1]
+port = sys.argv[2]
 
 connect_start = time.time()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(('76.223.88.101', 30000))
+s.connect((ip, int(port)))
 connect_end = time.time()
 connect_time = (connect_end-connect_start) * 1000
 print('connect time cost : %.2f ms' %connect_time)
