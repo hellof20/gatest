@@ -3,14 +3,22 @@
 import socket
 import time
 import sys
+import os
 
 ip = sys.argv[1]
 port = sys.argv[2]
-
+packet_size = int(sys.argv[3])
+command = "dd if=/dev/urandom of=test bs=" + str(packet_size) + "k count=1"
+print(command)
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+os.system(command)
+
+f = open("./test", "r")
+data=f.read()
+
 start = time.time()
-s.sendto(str('xx').encode('utf-8'), (ip, int(port)))
-print(s.recv(102400).decode('utf-8'))
+s.sendto(data, (ip, int(port)))
+print(len(s.recv(1024000)))
 end = time.time()
 running_time = (end-start) * 1000
 print('time cost : %.2f ms' %running_time)
