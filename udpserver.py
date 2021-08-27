@@ -1,18 +1,27 @@
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-
 import socket
-import time
 import sys
+import os
 
-ip = sys.argv[1]
-port = sys.argv[2]
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-start = time.time()
-s.sendto(str('xx').encode('utf-8'), (ip, int(port)))
-#print(s.recv(102400).decode('utf-8'))
-print(len(s.recv(102400)))
-end = time.time()
-running_time = (end-start) * 1000
-print('time cost : %.2f ms' %running_time)
-s.close()
+server_address = '0.0.0.0'
+server_port = int(sys.argv[1])
+packet_size = int(sys.argv[2])
+print(packet_size)
+command = "dd if=/dev/urandom of=test bs=" + str(packet_size) + "KB count=1"
+print(command)
+os.system(command)
+
+f = open("./test", "r")
+data=f.read()
+
+server = (server_address, server_port)
+sock.bind(server)
+
+print("Listening on " + server_address + ":" + str(server_port))
+while True:
+    payload, client_address = sock.recvfrom(102400)
+    print("Echoing data back to " + str(client_address))
+    sent = sock.sendto(data, client_address)
