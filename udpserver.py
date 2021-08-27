@@ -1,15 +1,18 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-import socket
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-server_address = '0.0.0.0'
-server_port = 31337
-server = (server_address, server_port)
-sock.bind(server)
-print("Listening on " + server_address + ":" + str(server_port))
-while True:
-    payload, client_address = sock.recvfrom(1024)
-    print("Echoing data back to " + str(client_address))
-    payload = "hello " + payload
-    sent = sock.sendto(payload, client_address)
+import socket
+import time
+import sys
+
+ip = sys.argv[1]
+port = sys.argv[2]
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+start = time.time()
+s.sendto(str('xx').encode('utf-8'), (ip, int(port)))
+#print(s.recv(102400).decode('utf-8'))
+print(len(s.recv(102400)))
+end = time.time()
+running_time = (end-start) * 1000
+print('time cost : %.2f ms' %running_time)
+s.close()
